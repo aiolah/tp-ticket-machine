@@ -33,4 +33,73 @@ class TicketMachineTest {
 		assertEquals(10 + 20, machine.getBalance(), "La balance n'est pas correctement mise à jour");
 	}
 
+	@Test
+	void noTicketIfNotEnoughMoney() {
+		machine.insertMoney(PRICE - 1);
+        assertFalse(machine.printTicket(), "Il n'y a pas assez d'argent");
+	}
+
+	@Test
+	void printTicketIfEnoughMoney() {
+		machine.insertMoney(PRICE);
+        assertTrue(machine.printTicket(), "Ticket non imprimé");
+	}
+
+	@Test
+	void lessBalanceIfTicketPrinted() {
+		machine.insertMoney(PRICE);
+		machine.printTicket();
+		assertEquals(0, machine.getBalance(), "Le montant n'a pas été débité");
+	}
+
+	@Test
+	void totalAugmenteAfterPrintedTicket() {
+		machine.insertMoney(50);
+		machine.printTicket();
+		machine.insertMoney(50);
+		machine.printTicket();
+
+		assertEquals(100, machine.getTotal(), "L'argent n'est pas bien ajouté");
+	}
+
+	@Test
+	void returnRefund() {
+		machine.insertMoney(PRICE);
+		machine.insertMoney(PRICE);
+		assertEquals(100, machine.refund(), "Le montant rendu n'est pas le bon");
+	}
+
+	@Test
+	void balanceEqualsZeroAfterRefund() {
+		machine.insertMoney(PRICE);
+		machine.insertMoney(PRICE);
+		machine.refund();
+		assertEquals(0, machine.getBalance(), "La machine n'a pas rendu tout l'argent");
+	}
+
+	@Test
+	void noNegativeAmountMustReturnException() {
+		try {
+			machine.insertMoney(-1);
+
+			fail("Cet appel doit lancer une exception !");
+		}
+		catch(IllegalArgumentException e)
+		{
+
+		}
+	}
+
+	@Test
+	void noMachineCreatedIfNegativePrice() {
+		try {
+			TicketMachine machine = new TicketMachine(-1);
+
+			fail("Cet appel doit lancer une exception !");
+		}
+		catch(IllegalArgumentException e)
+		{
+
+		}
+	}
 }
