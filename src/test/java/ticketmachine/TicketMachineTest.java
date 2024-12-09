@@ -34,18 +34,21 @@ class TicketMachineTest {
 	}
 
 	@Test
+	// S3 : on n’imprime pas le ticket si le montant inséré est insuffisant
 	void noTicketIfNotEnoughMoney() {
 		machine.insertMoney(PRICE - 1);
         assertFalse(machine.printTicket(), "Il n'y a pas assez d'argent");
 	}
 
 	@Test
+	// S4 : on imprime le ticket si le montant inséré est suffisant
 	void printTicketIfEnoughMoney() {
 		machine.insertMoney(PRICE);
         assertTrue(machine.printTicket(), "Ticket non imprimé");
 	}
 
 	@Test
+	// S5 : Quand on imprime un ticket, la balance est décrémentée du prix du ticket
 	void lessBalanceIfTicketPrinted() {
 		machine.insertMoney(PRICE);
 		machine.printTicket();
@@ -53,6 +56,7 @@ class TicketMachineTest {
 	}
 
 	@Test
+	// S6 :  le montant collecté est mis à jour quand on imprime un ticket (pasavant)
 	void totalAugmenteAfterPrintedTicket() {
 		machine.insertMoney(50);
 		machine.printTicket();
@@ -63,6 +67,7 @@ class TicketMachineTest {
 	}
 
 	@Test
+	// S7 : refund() rend correctement la monnaie
 	void returnRefund() {
 		machine.insertMoney(PRICE);
 		machine.insertMoney(PRICE);
@@ -70,6 +75,7 @@ class TicketMachineTest {
 	}
 
 	@Test
+	// S8 : refund()remet la balance à zéro
 	void balanceEqualsZeroAfterRefund() {
 		machine.insertMoney(PRICE);
 		machine.insertMoney(PRICE);
@@ -78,6 +84,7 @@ class TicketMachineTest {
 	}
 
 	@Test
+	// S9 : on ne peut pas insérer un montant négatif
 	void noNegativeAmountMustReturnException() {
 		try {
 			machine.insertMoney(-1);
@@ -91,6 +98,7 @@ class TicketMachineTest {
 	}
 
 	@Test
+	// S10 : on ne peut pas créer de machine qui délivre des tickets dont le prix est négatif
 	void noMachineCreatedIfNegativePrice() {
 		try {
 			TicketMachine machine = new TicketMachine(-1);
